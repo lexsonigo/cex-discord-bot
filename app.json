@@ -1,0 +1,5 @@
+{
+  "name": "cexbot",
+  "description": "A Node.js app for Discord using Express and Typescript",
+  "keywords": ["node", "express", "typescript", "discord"]
+}
