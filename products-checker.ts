@@ -1,9 +1,9 @@
-import { BehaviorSubject, Observable, catchError, concatMap, delay, from, map, of, switchMap, take, tap, toArray } from 'rxjs';
 import axios from 'axios';
+import { BehaviorSubject, Observable, catchError, concatMap, delay, from, map, of, take, tap, toArray } from 'rxjs';
 
 import type { BoxDetails, GetBoxDetailsPresentation } from "./box-details";
 import { sendMessage } from './client';
-import { createNoProductMessage, createProductMessage } from './create-message';
+import { createProductMessage } from './create-message';
 import { log } from "./log";
 import PRODUCTS from "./products.json";
 
@@ -16,12 +16,7 @@ export async function initProductsChecker(): Promise<void> {
   checkProducts$.pipe(
     tap(() => log('Checking products...')),
     concatMap(() => getProducts()),
-    tap((items) => {
-      log(`Products checked! Waiting ${GET_PRODUCTS_LIST_INTERVAL}ms before checking again all products...`);
-      if (items.every(item => item === null || item.ecomQuantityOnHand === 0)) {
-        sendMessage(createNoProductMessage());
-      }
-    }),
+    tap(() => log(`Products checked! Waiting ${GET_PRODUCTS_LIST_INTERVAL}ms before checking again all products...`)),
     delay(GET_PRODUCTS_LIST_INTERVAL),
     tap(() => checkProducts$.next())
   ).subscribe();
@@ -50,8 +45,10 @@ function fetchProductDetails(id: string): Observable<BoxDetails | null> {
     map(response => {
       if (response.status === 200) {
         const product = response.data.response.data.boxDetails[0];
-        log(`Product ${product.boxId} was checked. Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
-        sendMessage(createProductMessage(product));
+        log(`Product ${product.boxId} was checked. Quantity: ${product.ecomQuantityOnHand}. Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
+        if (product.ecomQuantityOnHand > 0) {
+          sendMessage(createProductMessage(product));
+        }
 
         return product;
       } else {

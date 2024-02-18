@@ -15,10 +15,3 @@ export function createProductMessage(boxDetails: BoxDetails): EmbedBuilder {
     .setTimestamp();
 }
 
-export function createNoProductMessage(): EmbedBuilder {
-  return new EmbedBuilder()
-    .setColor(0x808080)
-    .setTitle('No products available')
-    .setDescription('Check back later!')
-    .setTimestamp();
-}
