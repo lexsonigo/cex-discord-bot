@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable, catchError, concatMap, delay, from, map, of, switchMap, take, tap, toArray } from 'rxjs';
-import { fromFetch } from "rxjs/fetch";
+import axios from 'axios';
 
 import type { BoxDetails, GetBoxDetailsPresentation } from "./box-details";
 import { sendMessage } from './client';
@@ -41,19 +41,17 @@ function getProducts(): Observable<(BoxDetails | null)[]> {
 }
 
 function fetchProductDetails(id: string): Observable<BoxDetails | null> {
-  return fromFetch(`https://wss2.cex.uk.webuy.io/v3/boxes/${id}/detail`).pipe(
-    switchMap(response => {
-      if (response.ok) {
-        return from(response.json() as Promise<GetBoxDetailsPresentation>).pipe(
-          map(json => json.response.data.boxDetails[0]),
-          tap((product) => {
-            log(`Product ${product.boxId} was checked. Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
-            sendMessage(createProductMessage(product));
-          }),
-        );
+  return from(axios.get<GetBoxDetailsPresentation>(`https://wss2.cex.uk.webuy.io/v3/boxes/${id}/detail`)).pipe(
+    map(response => {
+      if (response.status === 200) {
+        const product = response.data.response.data.boxDetails[0];
+        log(`Product ${product.boxId} was checked. Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
+        sendMessage(createProductMessage(product));
+
+        return product;
       } else {
         log(`Error ${response.status} while fetching product ${id}.`)
-        return of(null);
+        return null;
       }
     }),
     catchError(err => {
