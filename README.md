@@ -1,14 +1,15 @@
-# CEX Discord Bot
+# cex-discord-bot
 
-A Node.js app for Discord using Express and Typescript.
+To install dependencies:
 
-## Running Locally
-
-Make sure you have [Node.js](http://nodejs.org/) installed.
-
-```sh
-$ npm install
-$ npm start
+```bash
+bun install
 ```
 
-Your app should now be running on [localhost:4200](http://localhost:4200/).
+To run:
+
+```bash
+bun run bot.ts
+```
+
+This project was created using `bun init` in bun v1.0.27. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
