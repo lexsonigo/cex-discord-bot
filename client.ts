@@ -3,8 +3,6 @@ import { Client, EmbedBuilder, GatewayIntentBits } from "discord.js";
 export const client = new Client({intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages]});
 
 export function sendMessage(message: EmbedBuilder) {
-
-  console.info(message.toJSON());
   
   if (!process.env.DISCORD_CHANNEL_ID) return;
 
@@ -12,5 +10,5 @@ export function sendMessage(message: EmbedBuilder) {
 
   if (!channel || !channel.isTextBased()) return;
 
-  // return channel.send({ embeds: [message] });
+  return channel.send({ embeds: [message] });
 }
