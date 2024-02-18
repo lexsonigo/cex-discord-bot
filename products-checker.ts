@@ -6,6 +6,7 @@ import { sendMessage } from './client';
 import { createProductMessage } from './create-message';
 import { log } from "./log";
 import PRODUCTS from "./products.json";
+import { storage } from './state';
 
 const GET_PRODUCTS_LIST_INTERVAL = 15 * 60 * 1_000;
 const GET_PRODUCT_INTERVAL = 5 * 1_000;
@@ -46,9 +47,11 @@ function fetchProductDetails(id: string): Observable<BoxDetails | null> {
       if (response.status === 200) {
         const product = response.data.response.data.boxDetails[0];
         log(`Product ${product.boxId} was checked. Quantity: ${product.ecomQuantityOnHand}. Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
-        if (product.ecomQuantityOnHand > 0) {
+        if (product.ecomQuantityOnHand > 0 && storage.get(product.boxId) !== null && storage.get(product.boxId) !== product.ecomQuantityOnHand) {
           sendMessage(createProductMessage(product));
         }
+
+        storage.set(product.boxId, product.ecomQuantityOnHand);
 
         return product;
       } else {

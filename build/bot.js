@@ -76118,6 +76118,9 @@ var products_default = [
   "785138320366b"
 ];
 
+// state.ts
+var storage = new Map;
+
 // products-checker.ts
 async function initProductsChecker() {
   const checkProducts$ = new import_rxjs.BehaviorSubject(undefined);
@@ -76137,9 +76140,10 @@ var fetchProductDetails = function(id) {
     if (response.status === 200) {
       const product = response.data.response.data.boxDetails[0];
       log(`Product ${product.boxId} was checked. Quantity: ${product.ecomQuantityOnHand}. Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
-      if (product.ecomQuantityOnHand > 0) {
+      if (product.ecomQuantityOnHand > 0 && storage.get(product.boxId) !== null && storage.get(product.boxId) !== product.ecomQuantityOnHand) {
         sendMessage(createProductMessage(product));
       }
+      storage.set(product.boxId, product.ecomQuantityOnHand);
       return product;
     } else {
       log(`Error ${response.status} while fetching product ${id}.`);
