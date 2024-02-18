@@ -34,7 +34,12 @@ function getProducts(): Observable<(BoxDetails | null)[]> {
     tap((i) => log(`Checking product ${PRODUCTS[i]}...`)),
     concatMap((i) => fetchProductDetails(PRODUCTS[i])),
     delay(GET_PRODUCT_INTERVAL),
-    tap(() => i$.next(i$.value + 1)),
+    tap(() => {
+      const next = i$.value + 1;
+      if (next < PRODUCTS.length) {
+        i$.next(next);
+      }
+    }),
     take(PRODUCTS.length),
     toArray()
   );

@@ -76133,7 +76133,12 @@ async function initProductsChecker() {
 }
 var getProducts = function() {
   const i$ = new import_rxjs.BehaviorSubject(0);
-  return i$.asObservable().pipe(import_rxjs.tap((i) => log(`Checking product ${products_default[i]}...`)), import_rxjs.concatMap((i) => fetchProductDetails(products_default[i])), import_rxjs.delay(GET_PRODUCT_INTERVAL), import_rxjs.tap(() => i$.next(i$.value + 1)), import_rxjs.take(products_default.length), import_rxjs.toArray());
+  return i$.asObservable().pipe(import_rxjs.tap((i) => log(`Checking product ${products_default[i]}...`)), import_rxjs.concatMap((i) => fetchProductDetails(products_default[i])), import_rxjs.delay(GET_PRODUCT_INTERVAL), import_rxjs.tap(() => {
+    const next = i$.value + 1;
+    if (next < products_default.length) {
+      i$.next(next);
+    }
+  }), import_rxjs.take(products_default.length), import_rxjs.toArray());
 };
 var fetchProductDetails = function(id) {
   return import_rxjs.from(axios_default.get(`https://wss2.cex.uk.webuy.io/v3/boxes/${id}/detail`)).pipe(import_rxjs.map((response) => {
