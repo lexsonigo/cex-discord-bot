@@ -2,6 +2,8 @@ import { Events } from 'discord.js';
 import { client } from './client';
 import { initProductsChecker } from './products-checker';
 
+require('dotenv').config();
+
 if (!process.env.DISCORD_TOKEN) {
   console.error('DISCORD_TOKEN is not defined .env');
   process.exit(1);
