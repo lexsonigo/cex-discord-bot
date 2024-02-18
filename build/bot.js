@@ -58787,12 +58787,12 @@ var import_discord3 = __toESM(require_src(), 1);
 // client.ts
 var import_discord = __toESM(require_src(), 1);
 function sendMessage(message) {
-  console.info(message.toJSON());
   if (!process.env.DISCORD_CHANNEL_ID)
     return;
   const channel = client.channels.cache.get(process.env.DISCORD_CHANNEL_ID);
   if (!channel || !channel.isTextBased())
     return;
+  return channel.send({ embeds: [message] });
 }
 var client = new import_discord.Client({ intents: [import_discord.GatewayIntentBits.Guilds, import_discord.GatewayIntentBits.GuildMessages] });
 
