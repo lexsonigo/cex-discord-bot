@@ -76139,8 +76139,9 @@ var fetchProductDetails = function(id) {
   return import_rxjs.from(axios_default.get(`https://wss2.cex.uk.webuy.io/v3/boxes/${id}/detail`)).pipe(import_rxjs.map((response) => {
     if (response.status === 200) {
       const product = response.data.response.data.boxDetails[0];
-      log(`Product ${product.boxId} was checked. Quantity: ${product.ecomQuantityOnHand}. Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
-      if (product.ecomQuantityOnHand > 0 && storage.get(product.boxId) !== null && storage.get(product.boxId) !== product.ecomQuantityOnHand) {
+      const lastQuantity = storage.get(product.boxId) ?? null;
+      log(`Product ${product.boxId} was checked. Quantity: ${product.ecomQuantityOnHand}. ${lastQuantity !== null ? `Last quantity: ${lastQuantity}. ` : ""}Waiting ${GET_PRODUCT_INTERVAL}ms seconds before checking the next product...`);
+      if (product.ecomQuantityOnHand > 0 && lastQuantity !== null && lastQuantity < product.ecomQuantityOnHand) {
         sendMessage(createProductMessage(product));
       }
       storage.set(product.boxId, product.ecomQuantityOnHand);
