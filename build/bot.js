@@ -68647,15 +68647,15 @@ var require_main2 = __commonJS((exports, module) => {
     let match2;
     while ((match2 = LINE.exec(lines)) != null) {
       const key = match2[1];
-      let value = match2[2] || "";
-      value = value.trim();
-      const maybeQuote = value[0];
-      value = value.replace(/^(['"`])([\s\S]*)\1$/mg, "$2");
+      let value2 = match2[2] || "";
+      value2 = value2.trim();
+      const maybeQuote = value2[0];
+      value2 = value2.replace(/^(['"`])([\s\S]*)\1$/mg, "$2");
       if (maybeQuote === '"') {
-        value = value.replace(/\\n/g, "\n");
-        value = value.replace(/\\r/g, "\r");
+        value2 = value2.replace(/\\n/g, "\n");
+        value2 = value2.replace(/\\r/g, "\r");
       }
-      obj[key] = value;
+      obj[key] = value2;
     }
     return obj;
   };
@@ -68740,7 +68740,7 @@ var require_main2 = __commonJS((exports, module) => {
     if (options && options.path && options.path.length > 0) {
       if (Array.isArray(options.path)) {
         for (const filepath of options.path) {
-          if (fs.existsSync(filepath)) {
+          if (fs2.existsSync(filepath)) {
             possibleVaultPath = filepath.endsWith(".vault") ? filepath : `${filepath}.vault`;
           }
         }
@@ -68750,7 +68750,7 @@ var require_main2 = __commonJS((exports, module) => {
     } else {
       possibleVaultPath = path.resolve(process.cwd(), ".env.vault");
     }
-    if (fs.existsSync(possibleVaultPath)) {
+    if (fs2.existsSync(possibleVaultPath)) {
       return possibleVaultPath;
     }
     return null;
@@ -68782,12 +68782,12 @@ var require_main2 = __commonJS((exports, module) => {
     let optionPathsThatExist = [];
     if (options && options.path) {
       if (!Array.isArray(options.path)) {
-        if (fs.existsSync(options.path)) {
+        if (fs2.existsSync(options.path)) {
           optionPathsThatExist = [_resolveHome(options.path)];
         }
       } else {
         for (const filepath of options.path) {
-          if (fs.existsSync(filepath)) {
+          if (fs2.existsSync(filepath)) {
             optionPathsThatExist.push(_resolveHome(filepath));
           }
         }
@@ -68800,7 +68800,7 @@ var require_main2 = __commonJS((exports, module) => {
     const parsed = {};
     try {
       for (const path2 of pathsToProcess) {
-        const singleFileParsed = DotenvModule.parse(fs.readFileSync(path2, { encoding }));
+        const singleFileParsed = DotenvModule.parse(fs2.readFileSync(path2, { encoding }));
         DotenvModule.populate(parsed, singleFileParsed, options);
       }
       let processEnv = process.env;
@@ -68879,7 +68879,7 @@ var require_main2 = __commonJS((exports, module) => {
       }
     }
   };
-  var fs = __require("fs");
+  var fs2 = __require("fs");
   var path = __require("path");
   var os = __require("os");
   var crypto = __require("crypto");
@@ -71796,6 +71796,7 @@ var axios_default = axios;
 
 // products-checker.ts
 var import_rxjs = __toESM(require_cjs4(), 1);
+import fs from "fs";
 
 // create-message.ts
 var import_discord2 = __toESM(require_src(), 1);
@@ -76140,8 +76141,13 @@ var fetchProductDetails = function(id) {
     return import_rxjs.of(null);
   }));
 };
+<<<<<<< HEAD
 var PRODUCTS_FILE = Bun.file("products.json", { type: "application/json" });
 var PRODUCTS = JSON.parse(await PRODUCTS_FILE.text());
+=======
+var value = fs.readFileSync("./products.json", "utf8");
+var PRODUCTS = JSON.parse(value);
+>>>>>>> 7afa982 (fix: use fs)
 var GET_PRODUCTS_LIST_INTERVAL = 900000;
 var GET_PRODUCT_INTERVAL = 5000;
 
