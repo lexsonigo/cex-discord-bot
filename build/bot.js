@@ -43065,7 +43065,7 @@ var require_dist11 = __commonJS((exports, module) => {
       resetAt: Date.now() + 60000
     };
   };
-  var __dirname = "/Users/jordanfonseca/Projects/Misc/cex-discord-bot/node_modules/@discordjs/ws/dist";
+  var __dirname = "/home/runner/work/cex-discord-bot/cex-discord-bot/node_modules/@discordjs/ws/dist";
   var __create2 = Object.create;
   var __defProp2 = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -76103,22 +76103,7 @@ function log(message) {
   console.log(`[${_now.toLocaleString(DateTime.DATE_SHORT)} ${_now.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}] ${message}`);
 }
 
-// products.json
-var products_default = [
-  "SPS1G1144AB",
-  "9312544025748ab",
-  "013388160051ab",
-  "3455194450099ab",
-  "013388160044ab",
-  "0317630557091ab",
-  "4974365611866ab",
-  "4012927080177a",
-  "045496733445a",
-  "0454967341211a",
-  "785138320366b"
-];
-
-// state.ts
+// storage.ts
 var storage = new Map;
 
 // products-checker.ts
@@ -76128,12 +76113,12 @@ async function initProductsChecker() {
 }
 var getProducts = function() {
   const i$ = new import_rxjs.BehaviorSubject(0);
-  return i$.asObservable().pipe(import_rxjs.tap((i) => log(`Checking product ${products_default[i]}...`)), import_rxjs.concatMap((i) => fetchProductDetails(products_default[i])), import_rxjs.delay(GET_PRODUCT_INTERVAL), import_rxjs.tap(() => {
+  return i$.asObservable().pipe(import_rxjs.tap((i) => log(`Checking product ${PRODUCTS[i]}...`)), import_rxjs.concatMap((i) => fetchProductDetails(PRODUCTS[i])), import_rxjs.delay(GET_PRODUCT_INTERVAL), import_rxjs.tap(() => {
     const next = i$.value + 1;
-    if (next < products_default.length) {
+    if (next < PRODUCTS.length) {
       i$.next(next);
     }
-  }), import_rxjs.take(products_default.length), import_rxjs.toArray());
+  }), import_rxjs.take(PRODUCTS.length), import_rxjs.toArray());
 };
 var fetchProductDetails = function(id) {
   return import_rxjs.from(axios_default.get(`https://wss2.cex.uk.webuy.io/v3/boxes/${id}/detail`)).pipe(import_rxjs.map((response) => {
@@ -76155,6 +76140,8 @@ var fetchProductDetails = function(id) {
     return import_rxjs.of(null);
   }));
 };
+var PRODUCTS_FILE = Bun.file("products.json", { type: "application/json" });
+var PRODUCTS = JSON.parse(await PRODUCTS_FILE.text());
 var GET_PRODUCTS_LIST_INTERVAL = 900000;
 var GET_PRODUCT_INTERVAL = 5000;
 
