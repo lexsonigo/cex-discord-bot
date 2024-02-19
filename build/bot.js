@@ -76141,13 +76141,8 @@ var fetchProductDetails = function(id) {
     return import_rxjs.of(null);
   }));
 };
-<<<<<<< HEAD
-var PRODUCTS_FILE = Bun.file("products.json", { type: "application/json" });
-var PRODUCTS = JSON.parse(await PRODUCTS_FILE.text());
-=======
 var value = fs.readFileSync("./products.json", "utf8");
 var PRODUCTS = JSON.parse(value);
->>>>>>> 7afa982 (fix: use fs)
 var GET_PRODUCTS_LIST_INTERVAL = 900000;
 var GET_PRODUCT_INTERVAL = 5000;
 
