@@ -5,8 +5,10 @@ import type { BoxDetails, GetBoxDetailsPresentation } from "./box-details";
 import { sendMessage } from './client';
 import { createProductMessage } from './create-message';
 import { log } from "./log";
-import PRODUCTS from "./products.json";
-import { storage } from './state';
+import { storage } from './storage';
+
+const PRODUCTS_FILE = Bun.file("products.json", { type: "application/json" });
+const PRODUCTS: string[] = JSON.parse(await PRODUCTS_FILE.text());
 
 const GET_PRODUCTS_LIST_INTERVAL = 15 * 60 * 1_000;
 const GET_PRODUCT_INTERVAL = 5 * 1_000;
